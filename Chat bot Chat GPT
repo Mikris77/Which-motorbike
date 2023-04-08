@@ -1,1 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Chatbot pour trouver la moto idéale</title>
+</head>
+<body>
+  <h1>Chatbot pour trouver la moto idéale</h1>
+  <div id="chat-container">
+    <div id="chat-log"></div>
+    <input type="text" id="chat-input" placeholder="Posez votre question..." />
+    <button onclick="sendMessage()">Envoyer</button>
+  </div>
+
+  <script>
+    // Fonction pour envoyer un message au chatbot
+    function sendMessage() {
+      var input = document.getElementById("chat-input");
+      var question = input.value;
+      addMessage("Vous : " + question);
+      input.value = "";
+      
+      // Appel à l'API de Chat GPT pour obtenir une réponse
+      // Remplacez 'VOTRE_CLE_API' par votre clé d'accès à l'API de Chat GPT
+      var apiKey = 'VOTRE_CLE_API';
+      var apiUrl = 'https://api.openai.com/v1/chat/completions';
+      fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + apiKey
+        },
+        body: JSON.stringify({
+          messages: [
+            { role: 'system', content: 'Vous êtes un utilisateur recherchant une moto.' },
+            { role: 'user', content: question }
+          ]
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+        var answer = data.choices[0].text;
+        addMessage("Bot : " + answer);
+      })
+      .catch(error => console.error(error));
+    }
+
+    // Fonction pour ajouter un message au chat log
+    function addMessage(message) {
+      var chatLog = document.getElementById("chat-log");
+      var messageElement = document.createElement("div");
+      messageElement.textContent = message;
+      chatLog.appendChild(messageElement);
+    }
+  </script>
+</body>
+</html>
 
